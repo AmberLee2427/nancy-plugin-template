@@ -1,6 +1,8 @@
 """A Nexus-Nancy plugin template."""
 
+from typing import Any, Dict, List, Optional
 from nexus_nancy.tools import ToolDefinition
+from nexus_nancy.provider import LLMProvider
 
 
 def hello(name: str = "World") -> str:
@@ -30,3 +32,55 @@ def register_tools():
             slash_command=None
         )
     ]
+
+
+class ExampleCustomProvider(LLMProvider):
+    """
+    Example of a custom LLM provider.
+    
+    To use this, set 'provider: example' in your nnancy.yaml.
+    """
+    def __init__(self, cfg, workspace_root):
+        self.cfg = cfg
+        self.workspace_root = workspace_root
+
+    def chat(
+        self,
+        messages: List[Dict[str, Any]],
+        tools: Optional[List[Dict[str, Any]]] = None,
+        *,
+        tool_choice: Optional[Any] = None,
+        parallel_tool_calls: Optional[bool] = None,
+        response_format: Optional[Dict[str, Any]] = None,
+        extra_body: Optional[Dict[str, Any]] = None,
+        require_bash_tool: bool = True,
+    ) -> Dict[str, Any]:
+        """
+        Repackage standard OpenAI-style requests for your specific backend.
+        """
+        # Example: Mock response
+        return {
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": "[RESPONSE]This is a response from the custom provider.[/RESPONSE][EOT]"
+                    },
+                    "finish_reason": "stop"
+                }
+            ]
+        }
+
+    def probe_capabilities(self) -> Dict[str, bool]:
+        """Return supported features."""
+        return {
+            "native_tools": False,
+            "reasoning_channel": False
+        }
+
+
+def register_providers():
+    """Register custom LLM providers."""
+    return {
+        "example": ExampleCustomProvider
+    }

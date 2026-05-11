@@ -19,6 +19,9 @@ dev = ["pytest>=8.0.0", "ruff>=0.5.0"]
 [project.entry-points."nexus_nancy.plugins"]
 {{cookiecutter.name}} = "nancy_{{cookiecutter.name}}.plugin"
 
+[project.entry-points."nexus_nancy.providers"]
+{{cookiecutter.name}} = "nancy_{{cookiecutter.name}}.plugin"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/nancy_{{cookiecutter.name}}"]
 
